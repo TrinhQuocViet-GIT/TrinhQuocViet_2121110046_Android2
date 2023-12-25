@@ -1,0 +1,14 @@
+Render Error
+
+A navigator can only contain Screen, Group'
+
+or React.Fragment' as its direct children (found
+'NativeStackNavigator?). To render this component
+in the navigator, pass it in the component prop to
+'Screen:.
+
+Call Stack
+
+See all 26 collapsed frames
+
+Dismiss Minimize
