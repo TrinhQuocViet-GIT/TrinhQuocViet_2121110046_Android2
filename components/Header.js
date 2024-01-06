@@ -1,10 +1,19 @@
+// Import các thư viện cần thiết
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
-import { Feather } from '@expo/vector-icons'; // Import icon từ thư viện
+import { View, TouchableOpacity, Image, TextInput } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Sử dụng navigation trong React Navigation
 
 import im1 from '../assets/logo.jpg';
 
 function HeaderComponent() {
+  const navigation = useNavigation();
+
+  const navigateToSignUp = () => {
+    // Điều hướng sang màn hình đăng ký khi nhấn vào icon User
+    navigation.navigate('SignUpScreen'); // Thay 'SignUpScreen' bằng tên màn hình đăng ký của bạn
+  };
+
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15, height: 50 }}>
       {/* Ảnh logo hình tròn bên trái */}
@@ -22,7 +31,7 @@ function HeaderComponent() {
       </View>
 
       {/* Đăng nhập/Đăng ký bên phải */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={navigateToSignUp}>
         {/* Icon đăng nhập/đăng ký */}
         <Feather name="user" size={24} color="black" />
       </TouchableOpacity>

@@ -1,14 +1,19 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
-import HeaderComponent from '../components/Header';
-import Slideshow from './SliderHome';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Products from './Products';
+import Slideshow from './SliderHome';
+import HeaderComponent from '../components/Header';
 
-function HomeScreen() {
+const HomeScreen = () => {
+  
+
+  
+
   return (
     <View style={{ flex: 1 }}>
       {/* Đưa HeaderComponent lên đầu trang */}
-      <HeaderComponent />
+      <HeaderComponent/>
 
       {/* Nội dung trang chính */}
       <ScrollView>
@@ -21,6 +26,6 @@ function HomeScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
 export default HomeScreen;

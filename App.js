@@ -1,42 +1,35 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './home/HomeScreen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import FavoritesScreen from './home/FavoritesScreen';
+import CartScreen from './home/CartScreen';
+import ProfileScreen from './home/ProfileScreen';
+import ProductDetail from './home/ProductDetail';
+import SignUpScreen from './home/user/SignUpScreen';
+import SignInScreen from './home/user/SignInScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-
-
-function FavoritesScreen() {
+const HomeStack = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Favorites!</Text>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
-}
+};
 
-function CartScreen() {
+
+
+const App = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Cart!</Text>
-    </View>
-  );
-}
-
-function ProfileScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
-
-
-export default function App() {
-  return (
-    
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -64,14 +57,13 @@ export default function App() {
           },
         }}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Favorites" component={FavoritesScreen} />
-        <Tab.Screen name="Cart" component={CartScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-
+        <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+        <Tab.Screen name="Favorites" component={FavoritesScreen}options={{ headerShown: false }} />
+        <Tab.Screen name="Cart" component={CartScreen}options={{ headerShown: false }}/>
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
       </Tab.Navigator>
-      
     </NavigationContainer>
-    
   );
-}
+};
+
+export default App;
