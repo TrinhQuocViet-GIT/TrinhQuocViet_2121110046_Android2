@@ -29,7 +29,7 @@ const ProductDetail = ({ route, navigation }) => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </View>
         </TouchableOpacity>
-        <Image source={{ uri: product.image }} style={{ width: '100%', height: '200%' }} />
+        <Image source={{ uri: product.image }} style={{ width: '100%', height: '170%' }} />
         <Text style={styles.productTitle}>{product.title}</Text>
         <Text style={styles.productPrice}>Giá: {product.price}</Text>
         <Text style={styles.productDescription1}>Mô tả sản phẩm: <Text style={styles.productDescription}>{product.description}</Text></Text>

@@ -68,6 +68,12 @@ const CartScreen = ({ route }) => {
     storeData('cart', updatedCart);
   };
 
+  const handleCheckout = () => {
+    // Xử lý logic thanh toán ở đây
+    console.log('Đã nhấn thanh toán');
+    // Ví dụ: Chuyển người dùng đến màn hình thanh toán hoặc thực hiện hành động thanh toán cụ thể
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Giỏ Hàng</Text>
@@ -111,9 +117,14 @@ const CartScreen = ({ route }) => {
             )}
           />
         ) : (
-          <Text>Giỏ hàng trống</Text>
+          <Text style={styles.emptyCartText}>Giỏ hàng trống</Text>
         )}
       </View>
+
+      {/* Nút thanh toán */}
+      <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+        <Text style={styles.checkoutText}>Thanh Toán</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -124,37 +135,43 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   heading: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   cartContainer: {
-    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'center',
   },
   cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 20,
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderRadius: 8,
   },
   productImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     marginRight: 10,
+    borderRadius: 8,
   },
   productDetails: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start',
   },
   productTitle: {
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 18,
     fontWeight: 'bold',
-    maxWidth: 150,
+    marginBottom: 5,
+    maxWidth: 180,
   },
   productPrice: {
-    fontSize: 14,
+    fontSize: 16,
+    color: 'green',
     marginBottom: 5,
   },
   quantityControls: {
@@ -165,12 +182,30 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   disabledButton: {
-    
     opacity: 0.5,
   },
   quantityText: {
     marginHorizontal: 10,
+    fontSize: 18,
+  },
+  emptyCartText: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  checkoutButton: {
+    backgroundColor: '#2ecc71',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginVertical: 20,
+  },
+  checkoutText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
+
 
 export default CartScreen;

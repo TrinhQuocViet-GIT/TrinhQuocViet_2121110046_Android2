@@ -1,22 +1,47 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList } from 'react-native';
+import CategoryApi from '../api/categoryApi';
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
 
-  const handleProductPress = (productId) => {
-    // Chuyển hướng đến màn hình chi tiết sản phẩm với productId
-    navigation.navigate('ProductDetail', { productId });
-  };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await CategoryApi.getCategories();
+        setCategories(categoriesData);
+        console.log(typeof categoriesData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setError('Error fetching categories. Please try again.'); // Lưu lỗi để hiển thị cho người dùng
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  console.log(categories);
 
   return (
     <View>
-      {/* Hiển thị danh sách sản phẩm */}
-      <TouchableOpacity onPress={() => handleProductPress(1)}>
-        <Text>Sản phẩm 1</Text>
-      </TouchableOpacity>
-      {/* Thêm các TouchableOpacity khác cho các sản phẩm khác */}
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <Text>List of Categories:</Text>
+      <FlatList
+      
+  data={categories}
+  keyExtractor={(item) => item.id.toString()}
+  
+  renderItem={({ item }) => (
+    
+    
+    <View>
+      <Text>Category Name: {item.categoryName}</Text>
+      <Text>Description: {item.description}</Text>
+    </View>
+  )
+  
+  }
+/>
     </View>
   );
 };
