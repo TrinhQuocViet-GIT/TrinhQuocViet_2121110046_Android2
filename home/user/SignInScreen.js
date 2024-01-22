@@ -2,28 +2,37 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
-const SignInScreen = () => {
+const SignInScreen = ({ route }) => {
   const navigation = useNavigation();
+  const { registeredUser } = route.params || {};
+
+  const hardcodedUsers = [
+    { username: 'u1', password: '123456', email: 'u1@example.com', phone: '123456789', address: '123 Street, City', wallet: '1000' },
+    { username: 'u2', password: '123456', email: 'u2@example.com', phone: '987654321', address: '456 Avenue, Town', wallet: '1500' },
+  ];
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(null);
 
-  const handleRegister = () => {
-    if (!username || !password || !confirmPassword) {
-      Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin.');
-      return;
+  const handleLogin = () => {
+    console.log('Attempting login with:', username, password);
+    const user = hardcodedUsers.find((u) => u.username === username && u.password === password);
+
+    if (user) {
+      console.log('Login successful for user:', user);
+      setLoginError(null);
+      Alert.alert('Thông báo', 'Đăng nhập thành công!');
+      
+      // Chuyển hướng sang ProfileScreen và truyền thông tin người dùng
+      navigation.navigate('Profile', { user });
+    } else {
+      console.log('Login failed');
+      setLoginError('Tên người dùng hoặc mật khẩu không đúng.');
     }
-
-    if (password !== confirmPassword) {
-      Alert.alert('Thông báo', 'Mật khẩu không khớp.');
-      return;
-    }
-
-    Alert.alert('Thông báo', 'Đăng ký thành công!');
   };
 
-  const handleLoginPress = () => {
+  const handleRegisterPress = () => {
     navigation.navigate('SignUpScreen');
   };
 
@@ -44,17 +53,24 @@ const SignInScreen = () => {
           secureTextEntry={true}
           style={styles.input}
         />
-        <TouchableOpacity onPress={handleLoginPress}>
-          <Text>Chưa có tài khoản? <Text style={styles.loginLink}>Đăng ký</Text></Text>
+        {loginError && <Text style={styles.errorText}>{loginError}</Text>}
+        {registeredUser && (
+          <Text style={styles.successText}>
+            Đã đăng ký thành công với tên người dùng: {registeredUser.username}
+          </Text>
+        )}
+        <TouchableOpacity onPress={handleRegisterPress}>
+          <Text>
+            Chưa có tài khoản? <Text style={styles.loginLink}>Đăng ký</Text>
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleRegister} style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -68,7 +84,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-
   },
   formContainer: {
     width: '80%',
@@ -104,6 +119,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     color: 'blue',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+  },
+  successText: {
+    color: 'green',
+    marginTop: 5,
   },
 });
 

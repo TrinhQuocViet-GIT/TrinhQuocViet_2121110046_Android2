@@ -11,6 +11,7 @@ import ProfileScreen from './home/ProfileScreen';
 import ProductDetail from './home/ProductDetail';
 import SignUpScreen from './home/user/SignUpScreen';
 import SignInScreen from './home/user/SignInScreen';
+import PaymentScreen from './home/PaymentScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -18,15 +19,14 @@ const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="HomeLord" component={HomeScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Payment" component={PaymentScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
-
-
 
 const App = () => {
   return (
@@ -50,17 +50,17 @@ const App = () => {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'blue',
+          activeTintColor: 'green',
           inactiveTintColor: 'gray',
           style: {
             display: 'flex',
           },
         }}
       >
-        <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-        <Tab.Screen name="Favorites" component={FavoritesScreen}options={{ headerShown: false }} />
-        <Tab.Screen name="Cart" component={CartScreen}options={{ headerShown: false }}/>
-        <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="Home" component={HomeStack} options={{ tabBarLabel: 'Home', headerShown: false }} />
+        <Tab.Screen name="Favorites" component={FavoritesScreen} options={{ tabBarLabel: 'Favorites', headerShown: false }} />
+        <Tab.Screen name="Cart" component={CartScreen} options={{ tabBarLabel: 'Cart', headerShown: false }} />
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profile', headerShown: false }} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
+
+  const hardcodedUsers = [
+    { username: 'u1', password: '123' },
+    { username: 'u2', password: '123' },
+  ];
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +25,18 @@ const SignUpScreen = () => {
       return;
     }
 
+    const isUsernameTaken = hardcodedUsers.some((user) => user.username === username);
+    if (isUsernameTaken) {
+      Alert.alert('Thông báo', 'Tên người dùng đã được sử dụng. Vui lòng chọn tên khác.');
+      return;
+    }
+
+    // Nếu mọi thứ hợp lệ, thêm người dùng mới vào mảng hardcodedUsers
+    hardcodedUsers.push({ username, password });
+
     Alert.alert('Thông báo', 'Đăng ký thành công!');
+    // Chuyển dữ liệu người dùng mới đăng ký sang màn hình đăng nhập
+    navigation.navigate('SignInScreen', { registeredUsername: username });
   };
 
   const handleLoginPress = () => {
@@ -65,7 +78,6 @@ const SignUpScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -78,7 +90,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-
   },
   formContainer: {
     width: '80%',

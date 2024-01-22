@@ -1,17 +1,19 @@
-// Import các thư viện cần thiết
-import React from 'react';
-import { View, TouchableOpacity, Image, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Sử dụng navigation trong React Navigation
-
+import { useNavigation } from '@react-navigation/native';
 import im1 from '../assets/logo.jpg';
 
-function HeaderComponent() {
+function HeaderComponent({ handleSearch }) {
   const navigation = useNavigation();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const navigateToSignUp = () => {
-    // Điều hướng sang màn hình đăng ký khi nhấn vào icon User
-    navigation.navigate('SignUpScreen'); // Thay 'SignUpScreen' bằng tên màn hình đăng ký của bạn
+    navigation.navigate('SignUpScreen');
+  };
+
+  const handleSearchPress = () => {
+    handleSearch(searchTerm);
   };
 
   return (
@@ -23,8 +25,13 @@ function HeaderComponent() {
 
       {/* Ô nhập và nút tìm kiếm */}
       <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginHorizontal: 10, backgroundColor: '#eee', borderRadius: 5 }}>
-        <TextInput placeholder="Tìm kiếm" style={{ flex: 1, padding: 8 }} />
-        <TouchableOpacity style={{ padding: 10 }}>
+        <TextInput
+          placeholder="Tìm kiếm"
+          style={{ flex: 1, padding: 8 }}
+          onChangeText={(text) => setSearchTerm(text)}
+          value={searchTerm}
+        />
+        <TouchableOpacity style={{ padding: 10 }} onPress={handleSearchPress}>
           {/* Icon tìm kiếm */}
           <Feather name="search" size={24} color="black" />
         </TouchableOpacity>
@@ -38,5 +45,8 @@ function HeaderComponent() {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  // Nếu cần thêm các kiểu dáng cho HeaderComponent, thêm ở đây
+});
 
 export default HeaderComponent;

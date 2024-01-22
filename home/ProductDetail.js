@@ -1,76 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import ProductApi from '../api/productApi';
 
-const ProductDetail = ({ route, navigation }) => {
+const ProductDetail = ({ route }) => {
   const [product, setProduct] = useState(null);
-  const { productId } = route.params;
+  const [error, setError] = useState(null);
+
+  const productId = route.params.productId; // Get the product ID from the route parameter
 
   useEffect(() => {
-    fetch(`https://fakestoreapi.com/products/${productId}`)
-      .then(res => res.json())
-      .then(data => {
-        setProduct(data);
-      })
-      .catch(error => {
+    const fetchProductDetail = async () => {
+      try {
+        const response = await ProductApi.getProductById(productId);
+
+        if (response && response.data) {
+          setProduct(response.data);
+        } else {
+          setError('No product details available. Please check the API response.');
+        }
+      } catch (error) {
         console.error('Error fetching product details:', error);
-      });
+        setError('Error fetching product details. Please try again.');
+      }
+    };
+
+    fetchProductDetail();
   }, [productId]);
 
+  const renderItem = ({ item }) => (
+    <View style={styles.productContainer}>
+      <Image source={{ uri: item.attributes.images }} style={styles.productImage} resizeMode="cover" />
+      <Text style={styles.productName}>Products Name: {item.attributes.productName}</Text>
+      <Text>Description: {item.attributes.description}</Text>
+      <Text>Created At: {item.attributes.detail}</Text>
+      <Text>Danh mục: {item.attributes.categories}</Text>
+      {/* Thêm các trường khác nếu cần */}
+    </View>
+  );
+
   return (
-    <ScrollView><View>
-    {product && (
-      <>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <View style={styles.overlay}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </View>
+    <View style={styles.container}>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+
+      {product ? (
+        <FlatList
+          data={[product]} // Wrap the product in an array for FlatList
+          keyExtractor={(item) => item.attributes.productName}
+          renderItem={renderItem}
+        />
+      ) : (
+        <Text>No product details available.</Text>
+      )}
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.addToCartButton}>
+          <Text style={styles.buttonText}>Thêm vào Giỏ Hàng</Text>
         </TouchableOpacity>
-        <Image source={{ uri: product.image }} style={{ width: '100%', height: '170%' }} />
-        <Text style={styles.productTitle}>{product.title}</Text>
-        <Text style={styles.productPrice}>Giá: {product.price}</Text>
-        <Text style={styles.productDescription1}>Mô tả sản phẩm: <Text style={styles.productDescription}>{product.description}</Text></Text>
-        {/* Display other product information */}
-      </>
-    )}
-  </View></ScrollView>
-    
+        <TouchableOpacity style={styles.buyNowButton}>
+          <Text style={styles.buttonText}>Mua Ngay</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    zIndex: 1,
+  container: {
+    flex: 1,
   },
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 50,
+  productContainer: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+  },
+  productImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
     padding: 10,
   },
-  productTitle: {
-    fontSize: 20,
+  addToCartButton: {
+    backgroundColor: '#2ecc71',
+    padding: 15,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 5,
+  },
+  buyNowButton: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 5,
+    flex: 1,
+    marginLeft: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
     fontWeight: 'bold',
-    marginTop: 10,
-  },
-  productDescription1: {
-    fontSize: 19,
-    fontWeight: 'i',
-    marginTop: 5,
-  },
-  productDescription: {
-    fontSize: 17,
-    fontWeight: 'i',
-    marginTop: 5,
-  },
-  productPrice: {
-    fontSize: 18,
-    marginTop: 5,
   },
 });
 

@@ -1,44 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
+import ProductApi from '../api/productApi';
 
 const FavoritesScreen = () => {
-  const navigation = useNavigation();
-  const [categoryData, setCategoryData] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { default: getCategoryData } = await import('../api/categoryApi');
-
-      const apiUrl = 'https://localhost:1337';
-      const token = '19ed8162e3a86caf503e26f9562df49d02a0aa7fcd808898b4ed8e6f18229bbd4733d6614929429c96717e6ec96f73871ee3c8e4f9dbe808d0759df73c875637d0ac6e8afc16dd5a208b31a73c01675a144823c7dd56acb0932382a070d2e9e81fab60b76f51ba3430b35adfda603658b7e3a15334ec5931a388cd2b94f42f36';
-
+    const fetchProducts = async () => {
       try {
-        const data = await getCategoryData(apiUrl, token);
-        setCategoryData(data.data); // Lấy mảng dữ liệu từ trường "data"
+        const response = await ProductApi.getProducts();
+
+        if (response && response.data && Array.isArray(response.data)) {
+          setProducts(response.data);
+        } else {
+          setError('No products available. Please check the API response.');
+        }
       } catch (error) {
-        // Xử lý lỗi nếu cần thiết
+        console.error('Error fetching categories:', error);
+        setError('Error fetching products. Please try again.');
       }
     };
 
-    fetchData();
+    fetchProducts();
   }, []);
+
+  const renderItem = ({ item }) => (
+    <View style={styles.productContainer}>
+      <Text>Products Name: {item.attributes.productName}</Text>
+      <Text>Description: {item.attributes.description}</Text>
+      <Text>Created At: {item.attributes.detail}</Text>
+      <Image
+        source={{ uri: item.attributes.images }}
+        style={styles.productImage}
+        resizeMode="cover"
+      />
+      <Text>Danh mục : {item.attributes.categories}</Text>
+      {/* Thêm các trường khác nếu cần */}
+    </View>
+  );
 
   return (
     <View>
-      <Text>Favorites Screen</Text>
-      <FlatList
-        data={categoryData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.category_name}</Text>
-            {/* Hiển thị các thông tin khác của danh mục */}
-          </View>
-        )}
-      />
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+
+      {products.length > 0 ? (
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.attributes.productName}
+          renderItem={renderItem}
+        />
+      ) : (
+        <Text>No products available.</Text>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  productContainer: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+  },
+  productImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
+  },
+});
 
 export default FavoritesScreen;
